@@ -38,8 +38,9 @@ std::priority_queue< std::pair<float,Vertex<T>*> , std::vector<std::pair<float,V
  	std::pair<float, Vertex<T>*> popped = pq.top();
 	pq.pop();
 	Vertex<T>* curr = popped.second;
-	float weight = popped.first;
+	/*float weight = popped.first;
 	mst = mst + weight;
+	*/
 	if(!curr->visited){ //not visited
  		curr->visited = true;
 		//for each neighbor of curr
@@ -52,6 +53,7 @@ std::priority_queue< std::pair<float,Vertex<T>*> , std::vector<std::pair<float,V
 			if(n->distance > edgeWeight){
 				n->prev = curr->id;
 				n->distance = edgeWeight;
+				mst = mst + edgeWeight;
  				std::pair<float, Vertex<T>*>pair (edgeWeight, n); //make pair to push to pq
 				pq.push(pair);
 
