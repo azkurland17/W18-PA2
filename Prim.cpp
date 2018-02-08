@@ -48,8 +48,8 @@ std::priority_queue< std::pair<float,Vertex<T>*> , std::vector<std::pair<float,V
 		for(auto itr = curr->edges.begin(); itr!= curr->edges.end(); itr++ ){
 			auto i = g.vertices.find(*itr);
 			n = i->second; //n is the neighbor of curr
-			float edgeWeight = g.get_weight(curr->id, n->id); //dist in curr + weight of new edge 
-			if(n->distance < edgeWeight){
+			float edgeWeight = g.get_weight(curr->id, n->id); //weight of new edge 
+			if(n->distance > edgeWeight){
 				n->prev = curr->id;
 				n->distance = edgeWeight;
  				std::pair<float, Vertex<T>*>pair (edgeWeight, n); //make pair to push to pq
