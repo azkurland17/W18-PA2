@@ -37,25 +37,27 @@ std::priority_queue< std::pair<float,Vertex<T>*> , std::vector<std::pair<float,V
  	std::pair<float, Vertex<T>*> popped = pq.top();
 	pq.pop();
 	Vertex<T>* curr = popped.second;
-	float weight = popped.first;
-	spt = spt + weight;
-	if(!curr->visited){ //not visited
- 		curr->visited = true;
-		//for each neighbor of curr
-		Vertex<T> * n;
-		float total_dist = 0;
-		for(auto itr = curr->edges.begin(); itr!= curr->edges.end(); itr++ ){
-			auto i = g.vertices.find(*itr);
-			n = i->second; //n is the neighbor of curr
-			float total_dist = curr->distance + g.get_weight(curr->id, n->id); //dist in curr + weight of new edge 
-			if(total_dist < n->distance){
-				n->prev = curr->id;
-				n->distance = total_dist;
- 				std::pair<float, Vertex<T>*>pair (total_dist, n); //make pair to push to pq
-				pq.push(pair);
+	if(!curr->visited){ //changed
+		float weight = popped.first;
+		spt = spt + weight;
+		if(!curr->visited){ //not visited
+	 		curr->visited = true;
+			//for each neighbor of curr
+			Vertex<T> * n;
+			float total_dist = 0;
+			for(auto itr = curr->edges.begin(); itr!= curr->edges.end(); itr++ ){
+				auto i = g.vertices.find(*itr);
+				n = i->second; //n is the neighbor of curr
+				float total_dist = curr->distance + g.get_weight(curr->id, n->id); //dist in curr + weight of new edge 
+				if(total_dist < n->distance){
+					n->prev = curr->id;
+					n->distance = total_dist;
+	 				std::pair<float, Vertex<T>*>pair (total_dist, n); //make pair to push to pq
+					pq.push(pair);
+				}
 			}
-		}
-	}	
+		}	
+	}
  }
  
 return spt;
