@@ -40,7 +40,7 @@ std::priority_queue< std::pair<float,Vertex<T>*> , std::vector<std::pair<float,V
 	Vertex<T>* curr = popped.second;
 	std::cout<< "popped node: "<<curr->id<<std::endl; //delete
 	if(!curr->visited){ //changed
-		float weight = popped.first;
+		float weight = g.get_weight(curr->id,curr->prev);
 		spt = spt + weight;
 		std::cout<<"spt +" <<weight<< std::endl; //delete
 		if(!curr->visited){ //not visited
@@ -63,7 +63,6 @@ std::priority_queue< std::pair<float,Vertex<T>*> , std::vector<std::pair<float,V
 		}	
 	}
  }
- 
 return spt;
 
 }
