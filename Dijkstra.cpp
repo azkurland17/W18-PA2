@@ -15,7 +15,7 @@
 
 template<class T>
 bool compare(std::pair<float,Vertex<T>*> p1, std::pair<float,Vertex<T> *> p2 ){
-    return p1.first < p2.first;
+    return p1.first > p2.first;
 }
 
 

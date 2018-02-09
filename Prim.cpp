@@ -10,13 +10,13 @@
 
 #include <queue>
 #include <vector>
-
+#include <iostream>
 #include "Graph.hpp"
 // include more libraries as needed
 
 template<class T>
 bool compare(std::pair<float,Vertex<T>*> p1, std::pair<float,Vertex<T> *> p2 ){
-    return p1.first < p2.first;
+    return p1.first > p2.first;
 }
 
 
@@ -38,31 +38,33 @@ std::priority_queue< std::pair<float,Vertex<T>*> , std::vector<std::pair<float,V
  	std::pair<float, Vertex<T>*> popped = pq.top();
 	pq.pop();
 	Vertex<T>* curr = popped.second;
-	/*float weight = popped.first;
-	mst = mst + weight;
-	*/
-	if(!curr->visited){ //not visited
- 		curr->visited = true;
-		//for each neighbor of curr
-		Vertex<T> * n;
-		//float total_dist = 0;
-		for(auto itr = curr->edges.begin(); itr!= curr->edges.end(); itr++ ){
-			auto i = g.vertices.find(*itr);
-			n = i->second; //n is the neighbor of curr
-			float edgeWeight = g.get_weight(curr->id, n->id); //weight of new edge 
-			if(n->distance > edgeWeight){
-				n->prev = curr->id;
-				n->distance = edgeWeight;
-				mst = mst + edgeWeight;
- 				std::pair<float, Vertex<T>*>pair (edgeWeight, n); //make pair to push to pq
-				pq.push(pair);
-
+	if(!curr->visited){
+		float weight = popped.first;
+		mst = mst + weight;
+		if(!curr->visited){ //not visited
+ 			curr->visited = true;
+			//for each neighbor of curr
+			Vertex<T> * n;
+			for(auto itr = curr->edges.begin(); itr!= curr->edges.end(); itr++ ){
+				auto i = g.vertices.find(*itr);
+				n = i->second; //n is the neighbor of curr
+				float edgeWeight = g.get_weight(curr->id, n->id); //weight of new edge 
+				if(n->distance > edgeWeight){
+					if(!n->visited){
+						n->prev = curr->id;
+						n->distance = edgeWeight;
+ 						std::pair<float, Vertex<T>*>pair (edgeWeight, n); 
+						//make pair to push to pq
+						pq.push(pair);
+					}
+				}
 			}
-		}
-	}	
+		}	
+ 	}
  }
+
  
-return mst;
+ return mst;
 
 }
 
