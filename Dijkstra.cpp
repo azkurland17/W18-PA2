@@ -12,6 +12,7 @@
 // include more libraries as needed
 #include <queue>
 #include <vector>
+#include <iostream>
 
 template<class T>
 bool compare(std::pair<float,Vertex<T>*> p1, std::pair<float,Vertex<T> *> p2 ){
@@ -37,9 +38,11 @@ std::priority_queue< std::pair<float,Vertex<T>*> , std::vector<std::pair<float,V
  	std::pair<float, Vertex<T>*> popped = pq.top();
 	pq.pop();
 	Vertex<T>* curr = popped.second;
+	std::cout<< "popped node: "<<curr->id<<std::endl; //delete
 	if(!curr->visited){ //changed
 		float weight = popped.first;
 		spt = spt + weight;
+		std::cout<<"spt +" <<weight<< std::endl; //delete
 		if(!curr->visited){ //not visited
 	 		curr->visited = true;
 			//for each neighbor of curr
@@ -54,6 +57,7 @@ std::priority_queue< std::pair<float,Vertex<T>*> , std::vector<std::pair<float,V
 					n->distance = total_dist;
 	 				std::pair<float, Vertex<T>*>pair (total_dist, n); //make pair to push to pq
 					pq.push(pair);
+					std::cout<<"pushing pair("<<total_dist<<","<<n->id<<")"<<std::endl;
 				}
 			}
 		}	
