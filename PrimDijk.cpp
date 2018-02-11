@@ -1,7 +1,7 @@
 // CSE 101 Winter 2018, PA 2
 //
-// Name: TODO put both partners' info if applicable
-// PID: TODO
+// Name: Alexandra Kurland, Jennifer Fung
+// PID: A92137786 A12099804
 // Sources of Help: TODO
 // Due: February 9th, 2018 at 11:59 PM
 
