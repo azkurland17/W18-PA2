@@ -25,12 +25,14 @@ bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
 	//created a new map to do bellman-ford
 	std::map<std::string, float> paths;
 	for( auto it = fees.begin(); it != fees.end(); it ++){
-		paths.insert(std::pair<std::string, float>(it->first, startPrice)); //change it->second
+	//	paths.insert(std::pair<std::string, float>(it->first, startPrice)); //change it->second
+		paths[it->first]=startPrice; 
 	}
 
 	//get starting node and starting node value
-	std::string currency = paths[fees.begin()->first];
-	float currValue = paths[fees.begin()->second];
+	
+	std::string currency = paths.begin()->first;
+	float currValue = paths[currency];
 
 	//begin bellman ford by iterating through all vertices in V
 	for( auto itr = fees.begin(); itr != fees.end(); itr++ ){
@@ -41,7 +43,7 @@ bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
 				std::string n = i->out;
 				float exchangeRate = i->rate;
 				float fee1 = (fees[currency]);
-				float fee2 = (fees[n])
+				float fee2 = (fees[n]);
 				//float transaction = 
 
 
