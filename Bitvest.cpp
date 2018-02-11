@@ -26,6 +26,7 @@ bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
 	std::map<std::string, float> paths;
 	for( auto it = fees.begin(); it != fees.end(); it ++){
 		paths.insert(it->first, startPrice); //change it->second
+	}
 
 	//get starting node and starting node value
 	std::string currency = paths[fees.begin()->first];
@@ -39,8 +40,8 @@ bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
 			if(i->in == currency){
 				std::string n = i->out;
 				float exchangeRate = i->rate;
-				float fee1 = (fees[currency]).second;
-				float fee2 = (fees[n]).second;
+				float fee1 = (fees[currency]);
+				float fee2 = (fees[n])
 				//float transaction = 
 
 
