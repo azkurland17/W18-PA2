@@ -25,7 +25,7 @@ bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
 	//created a new map to do bellman-ford
 	std::map<std::string, float> paths;
 	for( auto it = fees.begin(); it != fees.end(); it ++){
-		paths.insert(it->first, startPrice); //change it->second
+		paths.insert(std::pair<std::string, float>(it->first, startPrice)); //change it->second
 	}
 
 	//get starting node and starting node value
