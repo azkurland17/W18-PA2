@@ -38,12 +38,10 @@ float primdijk(Graph<T>& g, T src, float c) {
 		Vertex<T>* curSrc = i1->second;
 		
 		if(!curDest->visited){
-			std::cout<<"popped: "<< curr.src <<std::endl;
 			auto itt = g.vertices.find(curr.src);
 			Vertex<T> * u = itt->second;
-			float weight = g.get_weight(curr.src,u->prev);
+			float weight = g.get_weight(curr.src,curDest->id);
 			spt = spt + weight;
-			std::cout<<"spt +" <<weight<< std::endl; //delete
 			curDest->visited = true;
 			curDest->prev = curSrc->id;
 			curDest->distance = curSrc->distance + g.get_weight(curDest->id, curSrc->id);
@@ -54,8 +52,6 @@ float primdijk(Graph<T>& g, T src, float c) {
 				n = i->second;
 				float time = c*(curDest->distance) + g.get_weight(curDest->id, n->id);
 				auto next = Alarm<T>(curDest->id, n->id, time);
-				std::cout<< "time value :"<< time << std::endl;
-				std::cout<<"dest: " << curDest->id <<", neighbor: "<<n->id <<std::endl;
 				pq.push(next);
 			}
 		}
