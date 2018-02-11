@@ -39,9 +39,9 @@ bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
 			if(i->in == currency){
 				std::string n = i->out;
 				float exchangeRate = i->rate;
-				float fee1 = (fees[currency])->second;
-				float fee2 = (fees[n])->second;
-				float transaction = 
+				float fee1 = (fees[currency]).second;
+				float fee2 = (fees[n]).second;
+				//float transaction = 
 
 
 			}
