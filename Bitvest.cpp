@@ -15,18 +15,42 @@
 
 #include "Graph.hpp"
 #include "Bitvest.hpp"
+
+float startPrice = 100;
 // include more libraries as needed
 
 bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
   //TODO: Implement an algorithm to determine if a profitable trade is possible
-	std::map<std::string, float> graphs;
+
+	//created a new map to do bellman-ford
+	std::map<std::string, float> paths;
 	for( auto it = fees.begin(); it != fees.end(); it ++){
-		graphs.insert(it->first, 0);
+		paths.insert(it->first, startPrice); //change it->second
+
+	//get starting node and starting node value
+	std::string currency = paths[fees.begin()->first];
+	float currValue = paths[fees.begin()->second];
+
+	//begin bellman ford by iterating through all vertices in V
+	for( auto itr = fees.begin(); itr != fees.end(); itr++ ){
+		currency = itr->first;
+		//go through neighbors of currency
+		for(auto i = exchanges.begin(); i != exchanges.end(); i++){
+			if(i->in == currency){
+				std::string n = i->out;
+				float exchangeRate = i->rate;
+				float fee1 = (fees[currency])->second;
+				float fee2 = (fees[n])->second;
+				float transaction = 
+
+
+			}
+
+		}
+
+		
 	}
 
-	auto currency = weights[fees.begin()->first];
-	auto currValue = weights[fees.begin()->second];
-	
   return false;
 }
 #endif
