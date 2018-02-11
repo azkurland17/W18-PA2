@@ -45,7 +45,7 @@ float primdijk(Graph<T>& g, T src, float c) {
 			spt = spt + weight;
 			std::cout<<"spt +" <<weight<< std::endl; //delete
 			curDest->visited = true;
-			curDest->prev = curSrc;
+			curDest->prev = curSrc->id;
 			curDest->distance = curSrc->distance + g.get_weight(curDest->id, curSrc->id);
 
 			for( auto itr = curDest->edges.begin(); itr!= curDest->edges.end(); itr++ ){
