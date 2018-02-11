@@ -19,6 +19,7 @@ float primdijk(Graph<T>& g, T src, float c) {
 	auto vi = g.vertices.find(src);
 	Vertex<T> *source = vi->second;
 	source->distance = 0;	 
+	source->visited = true;
 	std::priority_queue<Alarm<T>, std::vector<Alarm<T>>> pq;
 	Vertex<T> *v;
 	for(auto itr = source->edges.begin(); itr!= source->edges.end(); itr++ ){
@@ -35,7 +36,7 @@ float primdijk(Graph<T>& g, T src, float c) {
 		Vertex<T>* curDest = i->second;
 		
 		if(!curDest->visited){
-			std::cout<<"popped: "<< curDest->id <<std::endl;
+			std::cout<<"popped: "<< curr.src <<std::endl;
 			auto itt = g.vertices.find(curr.src);
 			Vertex<T> * u = itt->second;
 			float weight = g.get_weight(curr.src,u->prev);
@@ -51,11 +52,13 @@ float primdijk(Graph<T>& g, T src, float c) {
 				Vertex<T>* n;
 				auto i = g.vertices.find(*itr);
 				n = i->second;
+				if(!n->visited){
 				float time = c*(curDest->distance) + g.get_weight(curDest->id, n->id);
 				auto next = Alarm<T>(curDest->id, n->id, time);
 				std::cout<< "time value :"<< time << std::endl;
-				std::cout<<"dest: " << currDest->id <<", neighbor: "<<n->id <<std::endl;
+				std::cout<<"dest: " << curDest->id <<", neighbor: "<<n->id <<std::endl;
 				pq.push(next);
+				}
 			}
 		}
 	}
