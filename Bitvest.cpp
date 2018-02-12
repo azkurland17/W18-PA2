@@ -31,7 +31,7 @@ static void buildG(Graph<std::string>& g, std::map<std::string, float> input, st
 	      		g.vertices[v1]->edges.insert(i->out);
 	      		float fee1 = (1-input[v1]);
 	      		float fee2 = (1-input[i->out]);
-	      		float w =log(i->rate * fee1 * fee2) * -1; 
+	      		float w = log(i->rate * fee1 * fee2)* -1; 
 	      		g.set_weight(v1,i->out,w);
 	      		std::cout<<"from v: "<<v1 << " to n: "<< i->out << " dist is "<< w<<std::endl;
 		}
@@ -41,13 +41,13 @@ static void buildG(Graph<std::string>& g, std::map<std::string, float> input, st
 }
 
 //helper function for bellman ford
-static void relax(Graph<std::string>& g, Vertex<std::string>* u, Vertex<std::string>* v){
-	std::cout<<"v- dist "<<v->distance<<std::endl;
-	std::cout << "v to u " << g.get_weight(u->id, v->id) <<std::endl;
-	if(v->distance > u->distance + g.get_weight(u->id, v->id)) {
-		v->distance = u->distance + g.get_weight(u->id, v->id);
-		v->prev = u->id;
-		std::cout<<"new v dist "<<v->distance<<std::endl;
+static void relax(Graph<std::string>& g, Vertex<std::string>* start, Vertex<std::string>* n){
+	std::cout<<"v- dist "<<start->distance<<std::endl;
+	std::cout << "v to u " << g.get_weight(start->id, n->id) <<std::endl;
+	if(n->distance > start->distance + g.get_weight(start->id, n->id)) {
+		n->distance = start->distance + g.get_weight(start->id, n->id);
+		n->prev = start->id;
+		std::cout<<"new v dist "<<n->distance<<std::endl;
 	}
 
 }
@@ -57,7 +57,7 @@ bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
 
 Graph<std::string> g;
 buildG(g, fees, exchanges);
-for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
+for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){ 
 	std::cout <<"vert: "<<it->first<<std::endl;
 	//std::cout << "vertices dist: " << it->second->distance << std::endl;
 	/*
@@ -68,36 +68,51 @@ for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
 	*/
   }
   //set distances to infinity
-  g.clear_distances();
+  g.clear_distances(); //for v in V dist inf and v.p none
 
 	//get starting node and starting node value
   Vertex<std::string>* src = g.vertices.begin()->second;
-  src->distance = 0;
+  src->distance = 0; //src dist = 0
   Vertex<std::string> * v;
-  Vertex<std::string> * u;
-  for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
-  	v = it->second;
-  	std::cout<<"v:"<<v->id <<std::endl;
-  	for(auto i = v->edges.begin(); i != v->edges.end(); i++ ){
+  Vertex<std::string> * neigh;
+for(int i = 0; i< g.vertices.size()-1; i++ ){
+  //for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){ 
+  	
+  	std::cout<<"v:"<<src->id <<std::endl;
+  	for(auto i = src->edges.begin(); i != src->edges.end(); i++ ){
 		auto itr = g.vertices.find(*i);
-		u = itr->second;
-  		std::cout<<"u:" <<u->id<<std::endl;
-  		relax(g,v,u);
+		neigh = itr->second;
+  		//std::cout<<"u:" <<neigh->id<<std::endl;
+  		relax(g,src,neigh);
 
   	}  
   
-
+}
 //detecting negative cycle
-  for(auto i = v->edges.begin(); i != v->edges.end(); i++ ){
-  	auto itr = g.vertices.find(*i);
-	u = itr->second;
+//for v in V
+//Vertex<std::string> * node;
+/*
+for( auto it =  g.vertices.begin(); it != g.vertices.end(); it++) {
 
-  if(v->distance < u->distance + g.get_weight(u->id, v->id)){
-  		std::cout<<"v-distance "<<v->distance << "> u-dist + w from u to v: "<< u->distance + g.get_weight(u->id, v->id)<<std::endl;
+	src = it->second;
+	for(auto i = src->edges.begin(); i != src->edges.end(); i++ ){
+  		auto itr = g.vertices.find(*i);
+		neigh = itr->second;
+  		std::cout<<"n-distance "<<neigh->distance << "> src->dist + w(src -> neigh): "<< src->distance + g.get_weight(src->id, neigh->id)<<std::endl;
+//	std::cout << "n->dist: " << neigh->distance << " w(src -> neigh): " << g.get_weight(src->id, neigh->id) << std::endl;
+  if(neigh->distance > src->distance + g.get_weight(src->id, neigh->id)){
 		return true;
   		}
 	}
-	}	
+}
+*/
+
+ v = g.vertices.begin()->second;
+Vertex<std::string> * s =g.vertices[v->prev];
+if( v->distance > s-> distance + g.get_weight(v->id, s->id);
+v = g.vertices[v->prev];
+
+	
   return false;
 }
 #endif
