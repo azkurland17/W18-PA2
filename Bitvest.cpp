@@ -40,9 +40,12 @@ static void buildG(Graph<std::string>& g, std::map<std::string, float> input, st
 
 //helper function for bellman ford
 static void relax(Graph<std::string>& g, Vertex<std::string>* u, Vertex<std::string>* v){
+	std::cout<<"v- dist "<<v->distance<<std::endl;
+	std::cout << "v to u " << g.get_weight(u->id, v->id) <<std:endl;
 	if(v->distance > u->distance + g.get_weight(u->id, v->id)) {
 		v->distance = u->distance + g.get_weight(u->id, v->id);
 		v->prev = u->id;
+		std::cout<<"new v dist "<<v->distance<<std::endl;
 	}
 
 }
@@ -54,7 +57,13 @@ Graph<std::string> g;
 buildG(g, fees, exchanges);
 for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
 	std::cout <<"vert: "<<it->first<<std::endl;
-	std::cout << "vertices dist: " << it->second->distance << std::endl;
+	//std::cout << "vertices dist: " << it->second->distance << std::endl;
+	/*
+	for(auto i = v->edges.begin(); i != v->edges.end(); i++ ){
+  		auto itr = g.vertices.find(*i);
+		std::cout << "vertices weight: " << itr->second->
+	}
+	*/
   }
   //set distances to infinity
   g.clear_distances();
@@ -66,10 +75,13 @@ for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
   Vertex<std::string> * u;
   for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
   	v = it->second;
+  	std::cout<<"v:"<<v->id <<std::endl;
   	for(auto i = v->edges.begin(); i != v->edges.end(); i++ ){
   		auto itr = g.vertices.find(*i);
   		u = itr->second;
+  		std::cout<<"u:" <<u->id<<std::endl;
   		relax(g,u,v);
+
   	}  
   }
 
