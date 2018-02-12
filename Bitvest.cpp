@@ -44,15 +44,21 @@ bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
 				float exchangeRate = i->rate;
 				float fee1 = (fees[currency]);
 				float fee2 = (fees[n]);
-				//float transaction = 
-
-
+				currValue = paths[currency];
+				float transaction = (currValue * (1-fee1) * exchangeRate 
+						* (1-fee2));
+				if(transaction > currValue){
+					paths[currency] = transaction;
+				}
+				
 			}
 
 		}
-
-		
 	}
+	if(startPrice < paths.begin()->second){
+		return true;
+	}	
+		
 
   return false;
 }
