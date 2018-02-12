@@ -39,10 +39,10 @@ static void buildG(Graph<std::string>& g, std::map<std::string, float> input, st
 }
 
 //helper function for bellman ford
-static void relax(Vertex<std::string>* u, Vertex<std::string>* v){
-	if(v->distance > u->distance + g.get_weight(u, v)) {
-		v->distance = u->distance + g.get_weight(u, v);
-		v->prev = u;
+static void relax(Graph<std::string>& g, Vertex<std::string>* u, Vertex<std::string>* v){
+	if(v->distance > u->distance + g.get_weight(u->id, v->id)) {
+		v->distance = u->distance + g.get_weight(u->id, v->id);
+		v->prev = u->id;
 	}
 
 }
@@ -62,21 +62,26 @@ for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
 	//get starting node and starting node value
   Vertex<std::string>* src = g.vertices.begin()->second;
   src->distance = 0;
-
+  Vertex<std::string> * v;
+  Vertex<std::string> * u;
   for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
-  	Vertex<std::string> * v = it->second;
+  	v = it->second;
   	for(auto i = v->edges.begin(); i != v->edges.end(); i++ ){
-  		Vertex<T>* u;
   		auto itr = g.vertices.find(*i);
   		u = itr->second;
-  		relax(u,v);
+  		relax(g,u,v);
   	}  
   }
+
+//detecting negative cycle
   for(auto i = v->edges.begin(); i != v->edges.end(); i++ ){
-  		if(v->distance > u.distance + g.get_weight(u, v)){
+  	auto itr = g.vertices.find(*i);
+	u = itr->second;
+	if(v->distance > u->distance + g.get_weight(u->id, v->id)){
   			return true;
   		}
-	
+
+	}	
   return false;
 }
 #endif
