@@ -28,11 +28,23 @@ static void buildG(Graph<std::string>& g, std::map<std::string, float> input, st
 	      for(auto i = ex.begin(); i!= ex.end(); i++){
 	      	if(v1 == i->in){ //iterate through exgs, if fee is current v then get neighbors
 	      		g.vertices[v1]->edges.insert(i->out);
-	      		g.set_weight(v1,i->out,i->rate);  
+	      		float fee1 = (1-input[v1]);
+	      		float fee2 = (1-input[i->out]);
+	      		float w = i->rate * fee1 * fee2; 
+	      		g.set_weight(v1,i->out,w);
 	      	}
 	      }
 	      
    		}	
+}
+
+//helper function for bellman ford
+static void relax(Vertex<std::string>* u, Vertex<std::string>* v){
+	if(v->distance > u->distance + g.get_weight(u, v)) {
+		v->distance = u->distance + g.get_weight(u, v);
+		v->prev = u;
+	}
+
 }
 
 bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
@@ -44,48 +56,27 @@ for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
 	std::cout <<"vert: "<<it->first<<std::endl;
 	std::cout << "vertices dist: " << it->second->distance << std::endl;
   }
-
-
-/*
-	//created a new map to do bellman-ford
-	std::map<std::string, float> paths;
-	for( auto it = fees.begin(); it != fees.end(); it ++){
-	//	paths.insert(std::pair<std::string, float>(it->first, startPrice)); //change it->second
-		paths[it->first]=startPrice; 
-	}
-	*/
+  //set distances to infinity
+  g.clear_distances();
 
 	//get starting node and starting node value
-	/*
-	std::string currency = g.vertices.begin()->first;
-	float currValue = g.ver[currency];
+  Vertex<std::string>* src = g.vertices.begin()->second;
+  src->distance = 0;
 
-	//begin bellman ford by iterating through all vertices in V
-	for( auto itr = fees.begin(); itr != fees.end(); itr++ ){
-		currency = itr->first;
-		//go through neighbors of currency
-		for(auto i = exchanges.begin(); i != exchanges.end(); i++){
-			if(i->in == currency){
-				std::string n = i->out;
-				float exchangeRate = i->rate;
-				float fee1 = (fees[currency]);
-				float fee2 = (fees[n]);
-				currValue = g.vertices.edges[currency];
-				float transaction = (currValue * (1-fee1) * exchangeRate 
-						* (1-fee2));
-				if(transaction > currValue){
-					g.vertices.edges[currency] = transaction;
-				}
-				
-			}
-
-		}
-	}
-	if(startPrice < paths.begin()->second){
-		return true;
-	}	
-		
-*/
+  for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
+  	Vertex<std::string> * v = it->second;
+  	for(auto i = v->edges.begin(); i != v->edges.end(); i++ ){
+  		Vertex<T>* u;
+  		auto itr = g.vertices.find(*i);
+  		u = itr->second;
+  		relax(u,v);
+  	}  
+  }
+  for(auto i = v->edges.begin(); i != v->edges.end(); i++ ){
+  		if(v->distance > u.distance + g.get_weight(u, v)){
+  			return true;
+  		}
+	
   return false;
 }
 #endif
