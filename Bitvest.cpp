@@ -12,6 +12,7 @@
 #include <string>
 #include <set>
 #include <map>
+#include <math.h>
 
 #include "Graph.hpp"
 #include "Bitvest.hpp"
@@ -30,9 +31,10 @@ static void buildG(Graph<std::string>& g, std::map<std::string, float> input, st
 	      		g.vertices[v1]->edges.insert(i->out);
 	      		float fee1 = (1-input[v1]);
 	      		float fee2 = (1-input[i->out]);
-	      		float w = i->rate * fee1 * fee2; 
+	      		float w =log(i->rate * fee1 * fee2) * -1; 
 	      		g.set_weight(v1,i->out,w);
-	      	}
+	      		std::cout<<"from v: "<<v1 << " to n: "<< i->out << " dist is "<< w<<std::endl;
+		}
 	      }
 	      
    		}	
@@ -41,7 +43,7 @@ static void buildG(Graph<std::string>& g, std::map<std::string, float> input, st
 //helper function for bellman ford
 static void relax(Graph<std::string>& g, Vertex<std::string>* u, Vertex<std::string>* v){
 	std::cout<<"v- dist "<<v->distance<<std::endl;
-	std::cout << "v to u " << g.get_weight(u->id, v->id) <<std:endl;
+	std::cout << "v to u " << g.get_weight(u->id, v->id) <<std::endl;
 	if(v->distance > u->distance + g.get_weight(u->id, v->id)) {
 		v->distance = u->distance + g.get_weight(u->id, v->id);
 		v->prev = u->id;
@@ -77,22 +79,24 @@ for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
   	v = it->second;
   	std::cout<<"v:"<<v->id <<std::endl;
   	for(auto i = v->edges.begin(); i != v->edges.end(); i++ ){
-  		auto itr = g.vertices.find(*i);
-  		u = itr->second;
+		auto itr = g.vertices.find(*i);
+		u = itr->second;
   		std::cout<<"u:" <<u->id<<std::endl;
-  		relax(g,u,v);
+  		relax(g,v,u);
 
   	}  
-  }
+  
 
 //detecting negative cycle
   for(auto i = v->edges.begin(); i != v->edges.end(); i++ ){
   	auto itr = g.vertices.find(*i);
 	u = itr->second;
-	if(v->distance > u->distance + g.get_weight(u->id, v->id)){
-  			return true;
-  		}
 
+  if(v->distance < u->distance + g.get_weight(u->id, v->id)){
+  		std::cout<<"v-distance "<<v->distance << "> u-dist + w from u to v: "<< u->distance + g.get_weight(u->id, v->id)<<std::endl;
+		return true;
+  		}
+	}
 	}	
   return false;
 }
