@@ -19,16 +19,15 @@
 float startPrice = 100;
 // include more libraries as needed
 
-static buildGraph(Graph<std::string>& g, std::map<std::string, float> input, std::list<Exchange> ex) {
-	auto it = input.begin();
-   		while (it != input.end()) {
-	      std:string v1 = it->first;
-	     
+static void buildG(Graph<std::string>& g, std::map<std::string, float> input, std::list<Exchange> ex) {
+	for( auto it = input.begin(); it != input.end(); it++) {
+	      std::string v1 = it->first;
+	    //std::cout<< "here"<<std::endl; 
 	      g.vertices[v1] = new Vertex<std::string>(v1);
-	      g.vertices[v1].visited = false;
+	      g.vertices[v1]->visited = false;
 	      for(auto i = ex.begin(); i!= ex.end(); i++){
 	      	if(v1 == i->in){ //iterate through exgs, if fee is current v then get neighbors
-	      		g.vertices[v1].edges.insert(i->out);
+	      		g.vertices[v1]->edges.insert(i->out);
 	      		g.set_weight(v1,i->out,i->rate);  
 	      	}
 	      }
@@ -40,8 +39,9 @@ bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
   //TODO: Implement an algorithm to determine if a profitable trade is possible
 
 Graph<std::string> g;
-buildGraph(g, fees, exchanges);
+buildG(g, fees, exchanges);
 for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
+	std::cout <<"vert: "<<it->first<<std::endl;
 	std::cout << "vertices dist: " << it->second->distance << std::endl;
   }
 
@@ -56,9 +56,9 @@ for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
 	*/
 
 	//get starting node and starting node value
-	
-	std::string currency = paths.begin()->first;
-	float currValue = paths[currency];
+	/*
+	std::string currency = g.vertices.begin()->first;
+	float currValue = g.ver[currency];
 
 	//begin bellman ford by iterating through all vertices in V
 	for( auto itr = fees.begin(); itr != fees.end(); itr++ ){
@@ -70,11 +70,11 @@ for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
 				float exchangeRate = i->rate;
 				float fee1 = (fees[currency]);
 				float fee2 = (fees[n]);
-				currValue = paths[currency];
+				currValue = g.vertices.edges[currency];
 				float transaction = (currValue * (1-fee1) * exchangeRate 
 						* (1-fee2));
 				if(transaction > currValue){
-					paths[currency] = transaction;
+					g.vertices.edges[currency] = transaction;
 				}
 				
 			}
@@ -85,7 +85,7 @@ for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
 		return true;
 	}	
 		
-
+*/
   return false;
 }
 #endif
