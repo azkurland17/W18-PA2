@@ -26,14 +26,15 @@ static void buildG(Graph<std::string>& g, std::map<std::string, float> input, st
 	    //std::cout<< "here"<<std::endl; 
 	      g.vertices[v1] = new Vertex<std::string>(v1);
 	      g.vertices[v1]->visited = false;
+	      g.vertices[v1]->distance = 0;
 	      for(auto i = ex.begin(); i!= ex.end(); i++){
 	      	if(v1 == i->in){ //iterate through exgs, if fee is current v then get neighbors
 	      		g.vertices[v1]->edges.insert(i->out);
-	      		float fee1 = (1-input[v1]);
-	      		float fee2 = (1-input[i->out]);
-	      		float w = log(i->rate * fee1 * fee2)* -1; 
-	      		g.set_weight(v1,i->out,w);
-	      		std::cout<<"from v: "<<v1 << " to n: "<< i->out << " dist is "<< w<<std::endl;
+	      		//float fee1 = (1-input[v1]);
+	      		//float fee2 = (1-input[i->out]);
+	      		//float w = log(i->rate * fee1 * fee2)* -1; 
+	      		g.set_weight(v1,i->out,i->rate);
+	      		std::cout<<"from v: "<<v1 << " to n: "<< i->out << " dist is "<< i->rate<<std::endl;
 		}
 	      }
 	      
@@ -41,11 +42,16 @@ static void buildG(Graph<std::string>& g, std::map<std::string, float> input, st
 }
 
 //helper function for bellman ford
-static void relax(Graph<std::string>& g, Vertex<std::string>* start, Vertex<std::string>* n){
-	std::cout<<"v- dist "<<start->distance<<std::endl;
-	std::cout << "v to u " << g.get_weight(start->id, n->id) <<std::endl;
-	if(n->distance > start->distance + g.get_weight(start->id, n->id)) {
-		n->distance = start->distance + g.get_weight(start->id, n->id);
+static void relax(Graph<std::string>& g, std::map<std::string, float> input, Vertex<std::string>* start, Vertex<std::string>* n){
+//	std::cout<<"v- dist "<<start->distance<<std::endl;
+//	std::cout << "v to u " << g.get_weight(start->id, n->id) <<std::endl;
+
+	float xRate = g.get_weight(start->id, n->id);
+	float fee1 = (1-input[start->id]);
+	float fee2 = (1-input[n->id]);
+	float w = log(xRate * fee1 * fee2)* -1; 
+	if(w > n->distance) {
+		n->distance = w;
 		n->prev = start->id;
 		std::cout<<"new v dist "<<n->distance<<std::endl;
 	}
@@ -67,23 +73,21 @@ for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
 	}
 	*/
   }
-  //set distances to infinity
-  g.clear_distances(); //for v in V dist inf and v.p none
 
 	//get starting node and starting node value
   Vertex<std::string>* src = g.vertices.begin()->second;
   src->distance = 0; //src dist = 0
   Vertex<std::string> * v;
   Vertex<std::string> * neigh;
-for(int i = 0; i< g.vertices.size()-1; i++ ){
-  //for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){ 
+//for(int i = 0; i< g.vertices.size()-1; i++ ){
+  for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){ 
   	
   	std::cout<<"v:"<<src->id <<std::endl;
   	for(auto i = src->edges.begin(); i != src->edges.end(); i++ ){
 		auto itr = g.vertices.find(*i);
 		neigh = itr->second;
   		//std::cout<<"u:" <<neigh->id<<std::endl;
-  		relax(g,src,neigh);
+  		relax(g,fees, src,neigh);
 
   	}  
   
@@ -91,7 +95,7 @@ for(int i = 0; i< g.vertices.size()-1; i++ ){
 //detecting negative cycle
 //for v in V
 //Vertex<std::string> * node;
-/*
+
 for( auto it =  g.vertices.begin(); it != g.vertices.end(); it++) {
 
 	src = it->second;
@@ -105,14 +109,8 @@ for( auto it =  g.vertices.begin(); it != g.vertices.end(); it++) {
   		}
 	}
 }
-*/
 
- v = g.vertices.begin()->second;
-Vertex<std::string> * s =g.vertices[v->prev];
-if( v->distance > s-> distance + g.get_weight(v->id, s->id);
-v = g.vertices[v->prev];
 
-	
   return false;
 }
 #endif
